@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>メニュー表サンプル</title>
+  <style>
+    :root {
+      --gap: 18px;
+      --side-width: 80px;
+      /* 左カラム幅（大画面） */
+      --line-color: #ddd;
+      --accent: #222;
+      --muted: #666;
+      --price-size: 0.95rem;
+      --price-currency-size: 0.7rem;
+      --tax-note-size: 0.6rem;
+      font-family: "Hiragino Kaku Gothic Pro", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    body {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    .menu {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06);
+      background: linear-gradient(180deg, #fff, #fbfbfb);
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .menu-header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .menu-header .note {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* カテゴリブロック */
+    .category {
+      display: grid;
+      grid-template-columns: var(--side-width) 1fr;
+      gap: var(--gap);
+      padding: 12px 8px;
+      border-top: 2px solid var(--line-color);
+      position: relative;
+    }
+
+    /* 左側（種類）上下中央寄せ */
+    .category-name {
+      display: flex;
+      align-items: center;
+      /* 縦方向中央寄せ */
+      justify-content: center;
+      /* 横方向中央寄せ */
+      text-align: center;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* 右側：項目リスト（縦に並ぶ） */
+    .items {
+      position: relative;
+      padding-left: 14px;
+      /* 線と商品名の余白調整 */
+    }
+
+    /* 中央の縦線（装飾） */
+    .items::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      background: var(--line-color);
+      border-radius: 1px;
+    }
+
+    /* 各商品行 */
+    .item {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      transition: background .12s;
+    }
+
+    .item:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .item-sub {
+      text-align: right;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: var(--price-size);
+      white-space: nowrap;
+    }
+
+    .price .currency {
+      font-size: var(--price-currency-size);
+      /* 円だけ小さくする */
+      vertical-align: baseline;
+      /* ベースラインに揃える */
+      color: #666;
+      /* 文字色を少し薄くする場合 */
+    }
+
+    .tax {
+      display: block;
+      color: var(--muted);
+      font-size: var(--tax-note-size);
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+
+    /* 右上に固定する言語ボタン */
+    .lang-switcher {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 999px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    .lang-btn {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      transition: transform .12s ease, background .12s ease;
+    }
+
+    .lang-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .lang-btn.active {
+      background: rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .flag {
+      font-size: 18px;
+      /* 絵文字の大きさ */
+    }
+
+    .copyright {
+      text-align: center;
+      /* 中央寄せ */
+      font-size: 0.8rem;
+      /* 小さめの文字 */
+      color: #666;
+      /* 少し薄いグレー */
+      margin-top: 20px;
+      /* 上に余白 */
+    }
+
+    .copyright small {
+      letter-spacing: 0.5px;
+      /* 文字間を少し空ける（見やすく） */
+    }
+
+    /* 小さい画面ではアイコンだけにする */
+    @media (max-width: 420px) {
+      .lang-btn span.label {
+        display: none;
+      }
+
+      .lang-switcher {
+        gap: 6px;
+        padding: 6px;
+      }
+    }
+
+    /* サンプル本文 */
+    main {
+      padding: 48px 0px 0px 0px;
+      max-width: 720px;
+      margin: 0 auto;
+      font-family: sans-serif;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+    }
+  </style>
+</head>
+<header>
+  <!-- 右上言語ボタン -->
+  <div class="lang-switcher" role="navigation" aria-label="言語切替">
+    <button class="lang-btn" data-lang="ja" aria-label="日本語 (Japanese)">
+      <span class="flag">🇯🇵</span><span class="label">日本語</span>
+    </button>
+    <button class="lang-btn" data-lang="en" aria-label="English">
+      <span class="flag">🇺🇸</span><span class="label">English</span>
+    </button>
+    <button class="lang-btn" data-lang="zh" aria-label="中文 (Chinese)">
+      <span class="flag">🇨🇳</span><span class="label">中文</span>
+    </button>
+    <button class="lang-btn" data-lang="ko" aria-label="한국어 (Korean)">
+      <span class="flag">🇰🇷</span><span class="label">한국어</span>
+    </button>
+  </div>
+</header>
+
+<body>
+
+  <main>
+    <section class="menu" aria-label="メニュー">
+      <div class="menu-header">
+        <h1 id="today-menu">本日のメニュー</h1>
+        <div class="note small" id="tax-included-price">税込価格表示</div>
+      </div>
+
+      <!-- JSでここにカテゴリを生成 -->
+      <div id="menu-container"></div>
+    </section>
+
+
+  </main>
+
+  <script>
+    // ======== JSON形式のメニューデータ =========
+    const menuData_ja = {
+      "ビール": {
+        "生ビール": { price: 550 },
+        "瓶ビール": { price: 660 },
+        "ノンアルコールビール": { price: 450 }
+      },
+      "ハイボール": {
+        "角ハイボール": { price: 495 },
+        "白ハイボール": { price: 495 },
+        "黒ハイボール": { price: 495 },
+        "碧ハイボール": { price: 715 },
+        "プレミアムハイボール": { price: 935 }
+      },
+      "マッコリ": {
+        "マッコリ": { price: 450 }
+      },
+      "果実酒": {
+        "南高梅酒": { price: 495 }
+      },
+      "チューハイ": {
+        "レモンサワー": { price: 495 },
+        "グリーンライムサワー": { price: 495 },
+        "濃厚ゆずサワー": { price: 495 },
+        "温州みかんサワー": { price: 550 }
+      },
+      "焼酎": {
+        "黒霧島": { price: 495 },
+        "いいちこ": { price: 495 },
+        "中々": { price: 660 },
+        "宝山": { price: 660 }
+      },
+      "日本酒": {
+        "貴仙寿 1合": { price: 495 },
+        "　　　 2合": { price: 715 }
+      },
+      "ワイン": {
+        "赤・白グラス": { price: 770 }
+      },
+      "ソフトドリンク": {
+        "オレンジジュース": { price: 385 },
+        "コーラ": { price: 385 },
+        "カルピスウォーター": { price: 385 },
+        "ウーロン茶": { price: 385 },
+        "ジンジャエール": { price: 385 },
+        "ラムネ": { price: 385 },
+        "ゆず茶": { price: 385 },
+        "麦茶": { price: 0 },
+      },
+      "刺身": {
+        "センマイ刺し": { price: 880 },
+        "ココロ炙り刺し": { price: 880 },
+        "和牛ツラミユッケ": { price: 1100 },
+        "和牛炙りユッケ": { price: 1375 },
+        "霜降りタン刺し": { price: 1430 },
+        "和牛霜降り刺し": { price: 1430 }
+      },
+      "タン": {
+        "並タンのネギ塩": { price: 1045 },
+        "上塩タン": { price: 1430 },
+        "上塩タンネギまみれ": { price: 1650 },
+        "厚切り上塩タン": { price: 1980 }
+      },
+      "赤身": {
+        "黒毛和牛カルビ": { price: 990 },
+        "中落ちカルビ": { price: 880 },
+        "こだわりハラミ": { price: 990 },
+        "和牛ツラミ": { price: 880 },
+        "黒毛和牛上カルビ": { price: 1650 },
+        "特選上ハラミ": { price: 1650 },
+        "黒毛和牛焼きすきカルビ": { price: 1650 },
+        "黒毛和牛焼きしゃぶカルビ": { price: 1650 },
+      },
+      "特選赤身": {
+        "黒毛和牛霜降りロース": { price: 1980 },
+        "名物どでか1枚ハラミ": { price: 2200 },
+        "名物どでか1枚ロース": { price: 2750 },
+        "黒毛和牛｢特選｣赤身肉盛り合わせ": { price: 3300 }
+      },
+      "ホルモン": {
+        "藤四郎名物 出汁で食べる塩ホルモン": { "price": 880 },
+        "こころ": { "price": 715 },
+        "レバー": { "price": 715 },
+        "センマイ": { "price": 715 },
+        "しま腸": { "price": 770 },
+        "上ミノ": { "price": 770 },
+        "和牛ツラミ": { "price": 880 },
+        "角切り炙りレバー": { "price": 990 },
+        "国産ホルモン3種盛り": { "price": 1430 }
+      },
+      "海鮮": {
+        "海老塩焼き": { "price": 770 },
+        "貝付きホタテ焼き": { "price": 770 },
+        "アワビ焼き": { "price": 1100 },
+        "海の幸3種盛り": { "price": 2200 }
+      },
+      "焼き野菜盛り": {
+        "玉ネギ": { "price": 440 },
+        "しいたけ": { "price": 440 },
+        "ピーマン": { "price": 440 },
+        "とうもろこし": { "price": 440 },
+        "焼き野菜盛り合わせ": { "price": 880 }
+      },
+      "鶏/豚": {
+        "宮崎鶏もも肉": { "price": 605 },
+        "豚トロ": { "price": 605 },
+        "グランアルトウインナー": { "price": 440 }
+      },
+      "一品": {
+        "ネギバカ": { "price": 330 },
+        "韓国のり": { "price": 330 },
+        "ムキニンニク焼き": { "price": 495 },
+        "冷やし出汁トマト": { "price": 550 },
+        "チヂミ": { "price": 660 },
+        "豚足": { "price": 550 }
+      },
+      "キムチ/ナムル": {
+        "白菜キムチ": { "price": 495 },
+        "大根キムチ": { "price": 495 },
+        "胡瓜キムチ": { "price": 495 },
+        "キムチ盛り合わせ": { "price": 880 },
+        "モヤシナムル": { "price": 495 },
+        "ホウレン草ナムル": { "price": 495 },
+        "大根ナムル": { "price": 495 },
+        "ナムル盛り合わせ": { "price": 880 }
+      },
+      "サラダ": {
+        "サンチュ": { "price": 440 },
+        "ゴマの葉": { "price": 440 },
+        "サニーレタス": { "price": 440 },
+        "サンチュ盛り合わせ": { "price": 440 },
+        "チョレギサラダ": { "price": 770 },
+        "旬の彩りサラダ": { "price": 880 }
+      },
+      "ご飯": {
+        "ライス 小": { "price": 275 },
+        "ライス 中": { "price": 385 },
+        "ライス 大": { "price": 495 },
+        "ビビンバ": { "price": 880 },
+        "ビビンバ ハーフ": { "price": 660 },
+        "石焼きビビンバ": { "price": 1100 },
+        "コムタンクッパ": { "price": 935 },
+        "ユッケジャンクッパ": { "price": 935 },
+        "ネギバカ玉子めし": { "price": 660 }
+      },
+      "スープ": {
+        "たまごスープ": { "price": 550 },
+        "わかめスープ": { "price": 550 },
+        "わかたまスープ": { "price": 660 },
+        "コムタンスープ": { "price": 880 },
+        "ユッケジャンスープ": { "price": 880 }
+      },
+      "麺": {
+        "盛岡冷麺": { "price": 1100 },
+        "盛岡冷麺 ハーフ": { "price": 770 },
+        "ピビン麺": { "price": 1100 },
+        "ピビン麺 ハーフ": { "price": 770 },
+        "温麺": { "price": 1100 }
+      }
+    };
+    const menuData_en = {
+      "Beer": {
+        "Draft Beer": { "price": 550 },
+        "Bottled Beer": { "price": 660 },
+        "Non-Alcoholic Beer": { "price": 450 }
+      },
+      "Highball": {
+        "Kaku Highball": { "price": 495 },
+        "White Highball": { "price": 495 },
+        "Black Highball": { "price": 495 },
+        "Ao Highball": { "price": 715 },
+        "Premium Highball": { "price": 935 }
+      }
+    }
+    const menuData_zh = {
+      "啤酒": {
+        "生啤酒": { "price": 550 },
+        "瓶装啤酒": { "price": 660 },
+        "无酒精啤酒": { "price": 450 }
+      },
+      "高球酒": {
+        "角高球": { "price": 495 },
+        "白高球": { "price": 495 },
+        "黑高球": { "price": 495 },
+        "碧高球": { "price": 715 },
+        "高级高球": { "price": 935 }
+      }
+    }
+    const menuData_ko = {
+      "맥주": {
+        "생맥주": { "price": 550 },
+        "병맥주": { "price": 660 },
+        "무알콜맥주": { "price": 450 }
+      },
+      "하이볼": {
+        "각하이볼": { "price": 495 },
+        "화이트하이볼": { "price": 495 },
+        "블랙하이볼": { "price": 495 },
+        "아오하이볼": { "price": 715 },
+        "프리미엄하이볼": { "price": 935 }
+      }
+    }
+    const tax = 0.10  //税率 : 1が100%記述
+    // ======== HTML生成処理 =========
+    const container = document.getElementById("menu-container");
+    const todayMenu = document.getElementById("today-menu");
+    const taxIncludedPrice = document.getElementById("tax-included-price");
+
+    function menu_delete() {
+      container.innerHTML = "";
+    }
+    function create_menu(menuData,language_data) {
+      for (const [category, items] of Object.entries(menuData)) {
+        // カテゴリブロック
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "category";
+
+        // 左のカテゴリ名
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "category-name";
+        nameDiv.textContent = category;
+
+        // 右のアイテムリスト
+        const itemsDiv = document.createElement("div");
+        itemsDiv.className = "items";
+        itemsDiv.setAttribute("role", "list");
+
+        // 各メニュー項目
+        for (const [itemName, detail] of Object.entries(items)) {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "item";
+          itemDiv.setAttribute("role", "listitem");
+
+          const itemTop = document.createElement("div");
+          itemTop.className = "item-top";
+
+          //商品名
+          const itemNameDiv = document.createElement("div");
+          itemNameDiv.className = "item-name";
+          itemNameDiv.textContent = itemName;
+
+          //値段
+          const itemSub = document.createElement("div");
+          itemSub.className = "item-sub";
+          var inTax = (detail.tax !== undefined ? detail.tax : Math.floor(detail.price * (1.0 + tax))).toLocaleString()
+          itemSub.innerHTML = `
+        <div class="price">${language_data[0]}${detail.price.toLocaleString()}<span class="currency">${language_data[1]}</span></div>
+        <span class="tax">${language_data[2]}${language_data[0]}${inTax}${language_data[1]}</span>
+      `;
+
+          itemTop.appendChild(itemNameDiv);
+          itemTop.appendChild(itemSub);
+          itemDiv.appendChild(itemTop);
+          itemsDiv.appendChild(itemDiv);
+        }
+
+        // 組み立て
+        categoryDiv.appendChild(nameDiv);
+        categoryDiv.appendChild(itemsDiv);
+        container.appendChild(categoryDiv);
+      }
+    }
+
+    // 簡易な多言語辞書（例）
+
+    const buttons = Array.from(document.querySelectorAll('.lang-btn'));
+    const i18nNodes = Array.from(document.querySelectorAll('[data-i18n]'));
+
+    // 選択を反映する関数
+    function applyLanguage(lang) {
+      // documentのlang属性を切り替え（アクセシビリティ向上）
+      document.documentElement.lang = lang;
+
+      // ボタンの active 表示
+      buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+
+      //メニューを削除
+      menu_delete();
+      // テキストを置き換え（簡易）
+      if (lang === "ja") {
+        todayMenu.textContent = "本日のメニュー";
+        taxIncludedPrice.textContent = "税込価格表示";
+        create_menu(menuData_ja, ["","円","税込み"]);
+      }
+      else if (lang === "en") {
+        todayMenu.textContent = "Today’s Menu";
+        taxIncludedPrice.textContent = "Display Price (Tax Included)";
+        create_menu(menuData_en, ["","yen","inc.tax "]);
+      }
+      else if (lang === "zh") {
+        todayMenu.textContent = "今日菜单";
+        taxIncludedPrice.textContent = "含税价格显示";
+        create_menu(menuData_zh, ["","yen","含税:"]);
+      }
+      else if(lang === "ko"){
+        todayMenu.textContent = "오늘의 메뉴";
+        taxIncludedPrice.textContent = "부가세 포함 가격 표시";
+        create_menu(menuData_ko, ["","yen","inc.tax "]);
+      }
+      else{
+        todayMenu.textContent = "言語エラー";
+        taxIncludedPrice.textContent = "language error";
+        console.log("error");
+      }
+    }
+
+    // 保存・読み込み
+    const STORAGE_KEY = 'preferred_language';
+    function saveLang(lang) { localStorage.setItem(STORAGE_KEY, lang); }
+    function loadLang() { return localStorage.getItem(STORAGE_KEY) || navigator.language.slice(0, 2) || 'ja'; }
+
+    // 初期化
+    const initial = loadLang();
+    applyLanguage(initial);
+
+    // クリックで切替え
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        applyLanguage(lang);
+        saveLang(lang);
+      });
+    });
+  </script>
+  <p class="copyright">
+    <small>© 2025 951kiwi. All Rights Reserved.</small>
+  </p>
+</body>
+
+</html>
