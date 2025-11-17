@@ -207,6 +207,49 @@
       /* 文字間を少し空ける（見やすく） */
     }
 
+    /*スイッチ関連*/
+    .switch-container {
+      width: 90%;
+      max-width: 500px;
+      background: #ddd;
+      border-radius: 40px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      padding: 4px;
+      margin: 40px auto;
+    }
+
+    .switch-option {
+      flex: 1;
+      text-align: center;
+      z-index: 2;
+      padding: 12px 0;
+      cursor: pointer;
+      font-size: 16px;
+      user-select: none;
+    }
+
+    .switch-slider {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      height: calc(100% - 8px);
+      background: white;
+      border-radius: 30px;
+      transition: 0.3s;
+      z-index: 1;
+    }
+
+    .selected-left .switch-slider {
+      left: 4px;
+    }
+
+    .selected-right .switch-slider {
+      left: calc(50% + 0px);
+    }
+
     /* 小さい画面ではアイコンだけにする */
     @media (max-width: 420px) {
       .lang-btn span.label {
@@ -258,9 +301,18 @@
         <h1 id="today-menu">本日のメニュー</h1>
         <div class="note small" id="tax-included-price">税込価格表示</div>
       </div>
-
+      <div id="switch" class="switch-container selected-left">
+        <div class="switch-slider"></div>
+        <div class="switch-option" data-type="Single">単品</div>
+        <div class="switch-option" data-type="Course">コース</div>
+      </div>
       <!-- JSでここにカテゴリを生成 -->
       <div id="menu-container"></div>
+      <!-- ▼ セット：サブコンテナ -->
+      <div id="sub-container">
+        <h2>セットメニュー</h2>
+        <p>ここにセットメニューが表示されます。</p>
+      </div>
     </section>
 
 
@@ -470,6 +522,30 @@
       }
     }
     const tax = 0.10  //税率 : 1が100%記述
+
+    // ======== ボタン処理 =========
+    const sw = document.getElementById("switch");
+    const menuBox = document.getElementById("menu-container");
+    const courseBox = document.getElementById("course-container");
+
+    sw.addEventListener("click", (e) => {
+      if (!e.target.dataset.type) return;
+
+      const type = e.target.dataset.type;
+
+      if (type === "Single") {
+        sw.classList.remove("selected-right");
+        sw.classList.add("selected-left");
+        menuBox.style.display = "block";
+      courseBox.style.display = "none";
+      } else {
+        sw.classList.remove("selected-left");
+        sw.classList.add("selected-right");
+        menuBox.style.display = "none";
+      courseBox.style.display = "block";
+      }
+    });
+
     // ======== HTML生成処理 =========
     const container = document.getElementById("menu-container");
     const todayMenu = document.getElementById("today-menu");
@@ -478,7 +554,7 @@
     function menu_delete() {
       container.innerHTML = "";
     }
-    function create_menu(menuData,language_data) {
+    function create_menu(menuData, language_data) {
       for (const [category, items] of Object.entries(menuData)) {
         // カテゴリブロック
         const categoryDiv = document.createElement("div");
@@ -549,26 +625,36 @@
       if (lang === "ja") {
         todayMenu.textContent = "本日のメニュー";
         taxIncludedPrice.textContent = "税込価格表示";
-        create_menu(menuData_ja, ["","円","税込み"]);
+        create_menu(menuData_ja, ["", "円", "税込み"]);
+        sw.querySelector('[data-type="Single"]').innerText = "単品";
+sw.querySelector('[data-type="Course"]').innerText = "コース";
       }
       else if (lang === "en") {
         todayMenu.textContent = "Today’s Menu";
         taxIncludedPrice.textContent = "Display Price (Tax Included)";
-        create_menu(menuData_en, ["","yen","inc.tax "]);
+        create_menu(menuData_en, ["", "yen", "inc.tax "]);
+        sw.querySelector('[data-type="Single"]').innerText = "Single";
+sw.querySelector('[data-type="Course"]').innerText = "Course";
       }
       else if (lang === "zh") {
         todayMenu.textContent = "今日菜单";
         taxIncludedPrice.textContent = "含税价格显示";
-        create_menu(menuData_zh, ["","yen","含税:"]);
+        create_menu(menuData_zh, ["", "yen", "含税:"]);
+        sw.querySelector('[data-type="Single"]').innerText = "单品";
+sw.querySelector('[data-type="Course"]').innerText = "套餐";
       }
-      else if(lang === "ko"){
+      else if (lang === "ko") {
         todayMenu.textContent = "오늘의 메뉴";
         taxIncludedPrice.textContent = "부가세 포함 가격 표시";
-        create_menu(menuData_ko, ["","yen","inc.tax "]);
+        create_menu(menuData_ko, ["", "yen", "inc.tax "]);
+        sw.querySelector('[data-type="Single"]').innerText = "단품";
+sw.querySelector('[data-type="Course"]').innerText = "코스";
       }
-      else{
+      else {
         todayMenu.textContent = "言語エラー";
         taxIncludedPrice.textContent = "language error";
+        sw.querySelector('[data-type="Single"]').innerText = "Single";
+sw.querySelector('[data-type="Course"]').innerText = "Course";
         console.log("error");
       }
     }
