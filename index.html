@@ -145,6 +145,92 @@
       white-space: nowrap;
     }
 
+    /*コース料理用*/
+
+    .course-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .course-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      /* 固定 */
+      overflow: hidden;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* 背景ぼかし（左右に広がる偽の背景） */
+    .course-image-blur {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 110%;
+      /* 少し広げて隙間を消す */
+      height: 100%;
+      object-fit: cover;
+      transform: translateX(-50%);
+      filter: blur(20px);
+      opacity: 0.7;
+      z-index: 1;
+    }
+
+    /* メイン画像（正方形を中心に表示） */
+    .course-image-main {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 100%;
+      width: auto;
+      /* ←正方形なので縦固定 */
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .course-content {
+      padding: 16px;
+    }
+
+    .course-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .course-price {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #d14;
+      font-weight: bold;
+    }
+
+    .items-list {
+      padding-left: 18px;
+      line-height: 1.5;
+      font-size: 14px;
+      color: #444;
+    }
+    .course-supplement {
+      padding-right: 10px;
+      padding-bottom: 5px;
+      font-size: 14px;
+      text-align: right;
+    }
+
     /* 右上に固定する言語ボタン */
     .lang-switcher {
       position: fixed;
@@ -307,10 +393,11 @@
         <div class="switch-option" data-type="Course">コース</div>
       </div>
       <!-- JSでここにカテゴリを生成 -->
-      <div id="menu-container"></div>
+      <div id="menu-container">
+      </div>
       <!-- ▼ セット：サブコンテナ -->
-      <div id="sub-container">
-        <h2>セットメニュー</h2>
+      <div id="course-container" style="display: none;">
+        <h2>コース料理</h2>
         <p>ここにセットメニューが表示されます。</p>
       </div>
     </section>
@@ -322,161 +409,191 @@
     // ======== JSON形式のメニューデータ =========
     const menuData_ja = {
       "ビール": {
-        "生ビール": { price: 550 },
-        "瓶ビール": { price: 660 },
-        "ノンアルコールビール": { price: 450 }
+        "生ビール(中)": { price: 550 },
+        "瓶ビール": { price: 650 },
+        "アサヒドライゼロ": { price: 450 }
       },
       "ハイボール": {
-        "角ハイボール": { price: 495 },
-        "白ハイボール": { price: 495 },
-        "黒ハイボール": { price: 495 },
-        "碧ハイボール": { price: 715 },
-        "プレミアムハイボール": { price: 935 }
+        "リッチハイボール": { price: 500 },
+        "白ハイボール": { price: 650 },
+        "黒ハイボール": { price: 650 },
+        "柚子ハイボール": { price: 550 },
+        "コークハイボール": { price: 550 },
+        "ジンジャーハイボール": { price: 550 },
+        "すだちハイボール": { price: 550 },
+        "本日のおすすめハイボール": { price: 1000 }
       },
       "マッコリ": {
-        "マッコリ": { price: 450 }
-      },
-      "果実酒": {
-        "南高梅酒": { price: 495 }
+        "JINRO(グラス)": { price: 450 },
+        "JINRO(ボトル)": { price: 2500 }
       },
       "チューハイ": {
-        "レモンサワー": { price: 495 },
-        "グリーンライムサワー": { price: 495 },
-        "濃厚ゆずサワー": { price: 495 },
-        "温州みかんサワー": { price: 550 }
+        "レモンサワー": { price: 500 },
+        "グリーンライムサワー": { price: 500 },
+        "濃厚柚子サワー": { price: 500 },
+        "巨峰サワー": { price: 550 },
+        "徳島すだちサワー": { price: 550 },
+        "温州みかんサワー": { price: 550 },
+        "高知生姜おろしサワー": { price: 550 }
+      },
+      "果実酒": {
+        "南高梅酒": { price: 500 },
+        "白桃酒": { price: 500 },
+        "カシス酒": { price: 500 },
+      },
+      "カクテル": {
+        "ファジーネーブル": { price: 500 },
+        "カシスオレンジ": { price: 500 },
+        "カシスウーロン": { price: 500 },
       },
       "焼酎": {
-        "黒霧島": { price: 495 },
-        "いいちこ": { price: 495 },
-        "中々": { price: 660 },
-        "宝山": { price: 660 }
+        "二階堂": { price: 500 },
+        "黒霧島": { price: 500 },
+        "富乃宝山": { price: 660 },
+        "中々": { price: 660 }
       },
       "日本酒": {
-        "貴仙寿 1合": { price: 495 },
-        "　　　 2合": { price: 715 }
+        "貴仙寿 1合": { price: 500 },
+        "　　　 2合": { price: 700 }
       },
-      "ワイン": {
-        "赤・白グラス": { price: 770 }
+      "赤ワイン": {
+        "カベルネ ソーヴィニヨン(グラス)": { price: 500 },
+        "ネプリカ プリミティーヴォ(ボトル)": { price: 3000 },
+        "セラー セレクション ピノ ノワール(ボトル)": { price: 4000 },
+        "イベリコ クリアンサ(ボトル)": { price: 5000 },
+        "クラレンドル ルージュ(ボトル)": { price: 7000 },
+        "IV コナンドラム レッド(ボトル)": { price: 9000 },
+      },
+      "白ワイン": {
+        "ｿｰｳﾞｨﾆﾖﾝ ﾌﾞﾗﾝ ｼｬﾙﾄﾞﾈ(グラス)": { price: 500 },
       },
       "ソフトドリンク": {
-        "オレンジジュース": { price: 385 },
-        "コーラ": { price: 385 },
-        "カルピスウォーター": { price: 385 },
-        "ウーロン茶": { price: 385 },
-        "ジンジャエール": { price: 385 },
-        "ラムネ": { price: 385 },
-        "ゆず茶": { price: 385 },
-        "麦茶": { price: 0 },
+        "ウーロン茶": { price: 350 },
+        "オレンジジュース": { price: 350 },
+        "コーラ": { price: 350 },
+        "カルピスジュース": { price: 350 },
+        "カルピスソーダ": { price: 350 },
+        "ジンジャエール": { price: 350 },
+        "ラムネ": { price: 350 },
+        "ゆず茶": { price: 350 },
+        "麦茶": { price: 0 }
       },
       "刺身": {
-        "センマイ刺し": { price: 880 },
-        "ココロ炙り刺し": { price: 880 },
-        "和牛ツラミユッケ": { price: 1100 },
-        "和牛炙りユッケ": { price: 1375 },
-        "霜降りタン刺し": { price: 1430 },
-        "和牛霜降り刺し": { price: 1430 }
+        "センマイ刺し": { price: 800 },
+        "ココロ炙り刺し": { price: 800 },
+        "和牛ツラミユッケ": { price: 1000 },
+        "和牛炙りユッケ": { price: 1250 },
+        "霜降りタン刺し": { price: 1300 },
+        "和牛霜降り刺し": { price: 1300 }
       },
       "タン": {
-        "並タンのネギ塩": { price: 1045 },
-        "上塩タン": { price: 1430 },
-        "上塩タンネギまみれ": { price: 1650 },
-        "厚切り上塩タン": { price: 1980 }
+        "並タンのネギ塩": { price: 950 },
+        "上塩タン": { price: 1300 },
+        "上塩タンネギまみれ": { price: 1500 },
+        "厚切り上塩タン": { price: 1800 }
       },
       "赤身": {
-        "黒毛和牛カルビ": { price: 990 },
-        "中落ちカルビ": { price: 880 },
-        "こだわりハラミ": { price: 990 },
-        "和牛ツラミ": { price: 880 },
-        "黒毛和牛上カルビ": { price: 1650 },
-        "特選上ハラミ": { price: 1650 },
-        "黒毛和牛焼きすきカルビ": { price: 1650 },
-        "黒毛和牛焼きしゃぶカルビ": { price: 1650 },
+        "黒毛和牛カルビ": { price: 900 },
+        "中おちカルビ": { price: 800 },
+        "こだわりハラミ": { price: 900 },
+        "和牛ツラミ": { price: 800 },
+        "黒毛和牛上カルビ": { price: 1500 },
+        "特選上ハラミ": { price: 1500 },
+        "黒毛和牛焼きすきカルビ": { price: 1500 },
+        "黒毛和牛焼きしゃぶカルビ": { price: 1500 },
       },
       "特選赤身": {
-        "黒毛和牛霜降りロース": { price: 1980 },
-        "名物どでか1枚ハラミ": { price: 2200 },
-        "名物どでか1枚ロース": { price: 2750 },
-        "黒毛和牛｢特選｣赤身肉盛り合わせ": { price: 3300 }
+        "黒毛和牛霜ふりロース": { price: 1800 },
+        "名物どでか1枚ハラミ": { price: 2000 },
+        "名物どでか1枚ロース": { price: 2500 },
+        "黒毛和牛｢特選｣赤身肉盛り合わせ": { price: 3000 }
       },
       "ホルモン": {
-        "藤四郎名物 出汁で食べる塩ホルモン": { "price": 880 },
-        "こころ": { "price": 715 },
-        "レバー": { "price": 715 },
-        "センマイ": { "price": 715 },
-        "しま腸": { "price": 770 },
-        "上ミノ": { "price": 770 },
-        "和牛ツラミ": { "price": 880 },
-        "角切り炙りレバー": { "price": 990 },
-        "国産ホルモン3種盛り": { "price": 1430 }
+        "藤四郎名物 出汁で食べる塩ホルモン": { "price": 800 },
+        "ココロ": { "price": 650 },
+        "レバー": { "price": 650 },
+        "センマイ": { "price": 650 },
+        "しま腸": { "price": 700 },
+        "上ミノ": { "price": 700 },
+        "和牛ツラミ": { "price": 800 },
+        "角切り炙りレバー": { "price": 900 },
+        "国産ホルモン3種盛り": { "price": 1300 }
       },
       "海鮮": {
-        "海老塩焼き": { "price": 770 },
-        "貝付きホタテ焼き": { "price": 770 },
-        "アワビ焼き": { "price": 1100 },
-        "海の幸3種盛り": { "price": 2200 }
+        "海老塩焼き": { "price": 700 },
+        "貝付きホタテ焼き": { "price": 700 },
+        "アワビ焼き": { "price": 1000 },
+        "海の幸3種盛り": { "price": 2000 }
       },
-      "焼き野菜盛り": {
-        "玉ネギ": { "price": 440 },
-        "しいたけ": { "price": 440 },
-        "ピーマン": { "price": 440 },
-        "とうもろこし": { "price": 440 },
-        "焼き野菜盛り合わせ": { "price": 880 }
+      "焼野菜": {
+        "玉ネギ": { "price": 400 },
+        "しいたけ": { "price": 400 },
+        "ピーマン": { "price": 400 },
+        "とうもろこし": { "price": 400 },
+        "焼き野菜盛り合わせ": { "price": 800 }
       },
       "鶏/豚": {
-        "宮崎鶏もも肉": { "price": 605 },
-        "豚トロ": { "price": 605 },
-        "グランアルトウインナー": { "price": 440 }
+        "宮崎鶏もも肉": { "price": 550 },
+        "豚トロ": { "price": 550 },
+        "グランアルトウインナー": { "price": 400 }
       },
       "一品": {
-        "ネギバカ": { "price": 330 },
-        "韓国のり": { "price": 330 },
-        "ムキニンニク焼き": { "price": 495 },
-        "冷やし出汁トマト": { "price": 550 },
-        "チヂミ": { "price": 660 },
-        "豚足": { "price": 550 }
+        "ネギバカ": { "price": 300 },
+        "韓国のり": { "price": 300 },
+        "ムキニンニク焼き": { "price": 450 },
+        "冷やし出汁トマト": { "price": 500 },
+        "チヂミ": { "price": 600 },
+        "豚足": { "price": 500 }
       },
-      "キムチ/ナムル": {
-        "白菜キムチ": { "price": 495 },
-        "大根キムチ": { "price": 495 },
-        "胡瓜キムチ": { "price": 495 },
-        "キムチ盛り合わせ": { "price": 880 },
-        "モヤシナムル": { "price": 495 },
-        "ホウレン草ナムル": { "price": 495 },
-        "大根ナムル": { "price": 495 },
-        "ナムル盛り合わせ": { "price": 880 }
+      "キムチ": {
+        "白菜キムチ": { "price": 450 },
+        "大根キムチ": { "price": 450 },
+        "胡瓜キムチ": { "price": 450 },
+        "キムチ盛り合わせ": { "price": 800 }
+      },
+      "ナムル": {
+        "モヤシナムル": { "price": 450 },
+        "ホウレン草ナムル": { "price": 450 },
+        "大根ナムル": { "price": 450 },
+        "ナムル盛り合わせ": { "price": 800 }
       },
       "サラダ": {
-        "サンチュ": { "price": 440 },
-        "ゴマの葉": { "price": 440 },
-        "サニーレタス": { "price": 440 },
-        "サンチュ盛り合わせ": { "price": 440 },
-        "チョレギサラダ": { "price": 770 },
-        "旬の彩りサラダ": { "price": 880 }
+        "サンチュ": { "price": 400 },
+        "ゴマの葉": { "price": 400 },
+        "サニーレタス": { "price": 400 },
+        "サンチュ盛り合わせ": { "price": 750 },
+        "チョレギサラダ": { "price": 700 },
+        "旬の彩りサラダ": { "price": 800 }
       },
       "ご飯": {
-        "ライス 小": { "price": 275 },
-        "ライス 中": { "price": 385 },
-        "ライス 大": { "price": 495 },
-        "ビビンバ": { "price": 880 },
-        "ビビンバ ハーフ": { "price": 660 },
-        "石焼きビビンバ": { "price": 1100 },
-        "コムタンクッパ": { "price": 935 },
-        "ユッケジャンクッパ": { "price": 935 },
-        "ネギバカ玉子めし": { "price": 660 }
+        "ライス 小": { "price": 250 },
+        "ライス 中": { "price": 350 },
+        "ライス 大": { "price": 450 },
+        "ビビンバ 　　　": { "price": 800 },
+        "ビビンバ ハーフ": { "price": 600 },
+        "石焼きビビンバ": { "price": 1000 },
+        "コムタンクッパ": { "price": 850 },
+        "ユッケジャンクッパ": { "price": 850 },
+        "ネギバカ玉子めし": { "price": 600 }
       },
       "スープ": {
-        "たまごスープ": { "price": 550 },
-        "わかめスープ": { "price": 550 },
-        "わかたまスープ": { "price": 660 },
-        "コムタンスープ": { "price": 880 },
-        "ユッケジャンスープ": { "price": 880 }
+        "たまごスープ": { "price": 500 },
+        "たまごスープ ハーフ": { "price": 400 },
+        "わかめスープ": { "price": 500 },
+        "わかめスープ ハーフ": { "price": 400 },
+        "わかたまスープ": { "price": 600 },
+        "わかたまスープ ハーフ": { "price": 500 },
+        "コムタンスープ": { "price": 800 },
+        "コムタンスープ ハーフ": { "price": 600 },
+        "ユッケジャンスープ": { "price": 800 },
+        "ユッケジャンスープ ハーフ": { "price": 600 }
       },
       "麺": {
-        "盛岡冷麺": { "price": 1100 },
-        "盛岡冷麺 ハーフ": { "price": 770 },
-        "ピビン麺": { "price": 1100 },
-        "ピビン麺 ハーフ": { "price": 770 },
-        "温麺": { "price": 1100 }
+        "盛岡冷麺": { "price": 1000 },
+        "盛岡冷麺 ハーフ": { "price": 700 },
+        "ピビン麺": { "price": 1000 },
+        "ピビン麺 ハーフ": { "price": 700 },
+        "温麺": { "price": 1000 }
       }
     };
     const menuData_en = {
@@ -521,6 +638,118 @@
         "프리미엄하이볼": { "price": 935 }
       }
     }
+    const courseMenuData_ja = {
+      "梅コース": {
+        price: 6600,
+        tax_included: true,
+        image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/ume.jpg",
+        items: [
+          "キムチ盛り合わせ",
+          "ナムル盛り合わせ",
+          "新鮮チョレギサラダ",
+          "センマイ刺し",
+          "上塩タン",
+          "黒毛和牛上カルビ",
+          "名物1枚ハラミステーキ",
+          "すき焼きカルビ",
+          "国産ホルモン3種盛"
+        ],
+        supplement : "飲み放題付き"
+
+      },
+
+      "竹コース": {
+        price: 7700,
+        tax_included: true,
+        image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/take.jpg",
+        items: [
+          "キムチ盛り合わせ",
+          "ナムル盛り合わせ",
+          "新鮮チョレギサラダ",
+          "上塩タン",
+          "和牛霜ふり刺し",
+          "特選上ハラミ",
+          "和牛一枚霜降りロース",
+          "黒毛和牛特選A5赤身肉",
+          "国産ホルモン3種盛"
+        ],
+        supplement : "飲み放題付き"
+      },
+      "松コース": {
+        price: 8800,
+        tax_included: true,
+        image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/matsu.jpg",
+        items: [
+          "キムチ盛り合わせ",
+          "ナムル盛り合わせ",
+          "新鮮チョレギサラダ",
+          "和牛霜降り刺し",
+          "厚切り上塩タン",
+          "和牛一枚霜ふりロース",
+          "希少部位A5赤身肉",
+          "黒毛和牛特選A5赤身肉",
+          "おまかせ肉寿司2種盛"
+        ],
+        supplement : "飲み放題付き"
+      }
+    };
+
+    const courseMenuData_en = {
+  "Ume Course": {
+    price: 6050,
+    tax_included: true,
+    image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/ume.jpg",
+    items: [
+      "Assorted Kimchi",
+      "Assorted Namul",
+      "Fresh Choregi Salad",
+      "Senmai Sashimi (Omasum)",
+      "Premium Salted Tongue",
+      "Wagyu Premium Karubi",
+      "Signature One-Slice Harami Steak",
+      "Sukiyaki-Style Karubi",
+      "Assorted Domestic Offal (3 kinds)"
+    ],
+    supplement: "Food only: ¥6,050 (inc.tax)<br>All-you-can-drink included: ¥6,600 (inc.tax)"
+  },
+
+  "Take Course": {
+    price: 7260,
+    tax_included: true,
+    image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/take.jpg",
+    items: [
+      "Assorted Kimchi",
+      "Assorted Namul",
+      "Fresh Choregi Salad",
+      "Premium Salted Tongue",
+      "Wagyu Marbled Sashimi",
+      "Premium Harami",
+      "Wagyu One-Slice Marbled Loin",
+      "Wagyu Selected A5 Lean Meat",
+      "Assorted Domestic Offal (3 kinds)"
+    ],
+    supplement: "Food only: ¥7,260 (inc.tax)<br>All-you-can-drink included: ¥7,700 (inc.tax)"
+  },
+
+  "Matsu Course": {
+    price: 8050,
+    tax_included: true,
+    image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/matsu.jpg",
+    items: [
+      "Assorted Kimchi",
+      "Assorted Namul",
+      "Fresh Choregi Salad",
+      "Wagyu Marbled Sashimi",
+      "Thick-Cut Premium Salted Tongue",
+      "Wagyu One-Slice Marbled Loin",
+      "Rare A5 Wagyu Lean Cut",
+      "Selected A5 Wagyu Lean Meat",
+      "Chef’s Choice Meat Sushi (2 kinds)"
+    ],
+    supplement: "Food only: ¥8,050 (inc.tax)<br>All-you-can-drink included: ¥8,800 (inc.tax)"
+  }
+};
+
     const tax = 0.10  //税率 : 1が100%記述
 
     // ======== ボタン処理 =========
@@ -537,22 +766,24 @@
         sw.classList.remove("selected-right");
         sw.classList.add("selected-left");
         menuBox.style.display = "block";
-      courseBox.style.display = "none";
+        courseBox.style.display = "none";
       } else {
         sw.classList.remove("selected-left");
         sw.classList.add("selected-right");
         menuBox.style.display = "none";
-      courseBox.style.display = "block";
+        courseBox.style.display = "block";
       }
     });
 
     // ======== HTML生成処理 =========
     const container = document.getElementById("menu-container");
+    const courseContainer = document.getElementById("course-container");
     const todayMenu = document.getElementById("today-menu");
     const taxIncludedPrice = document.getElementById("tax-included-price");
 
     function menu_delete() {
       container.innerHTML = "";
+      courseContainer.innerHTML = "";
     }
     function create_menu(menuData, language_data) {
       for (const [category, items] of Object.entries(menuData)) {
@@ -606,6 +837,33 @@
       }
     }
 
+    function create_course_menu(menuData, language_data) {
+      for (const [name, data] of Object.entries(menuData)) {
+        const card = document.createElement("div");
+        card.className = "course-card";
+
+        card.innerHTML = `
+        <div class="course-image-wrapper">
+          <img src="${data.image}" class="course-image-blur">
+          <img src="${data.image}" class="course-image-main">
+        </div>
+        <div class="course-content">
+          <div class="course-title">${name}</div>
+          <div class="course-price">￥${data.price.toLocaleString()}${language_data[0]}（${language_data[1]}）</div>
+          <ul class="items-list">
+            ${data.items.map(item => `<li>${item}</li>`).join("")}
+          </ul>
+          <div class="course-supplement">${data.supplement}</div>
+        </div>
+      `;
+
+        courseContainer.appendChild(card);
+      }
+      const lastSupplement = document.createElement("h5");
+      lastSupplement.innerHTML = `${language_data[2]}`
+      courseContainer.appendChild(lastSupplement);
+    }
+
     // 簡易な多言語辞書（例）
 
     const buttons = Array.from(document.querySelectorAll('.lang-btn'));
@@ -626,35 +884,37 @@
         todayMenu.textContent = "本日のメニュー";
         taxIncludedPrice.textContent = "税込価格表示";
         create_menu(menuData_ja, ["", "円", "税込み"]);
+        create_course_menu(courseMenuData_ja, ["","税込","※コース料理は人数分のご注文をお願いします<br>※ご飯はおかわり自由です"]);
         sw.querySelector('[data-type="Single"]').innerText = "単品";
-sw.querySelector('[data-type="Course"]').innerText = "コース";
+        sw.querySelector('[data-type="Course"]').innerText = "コース";
       }
       else if (lang === "en") {
         todayMenu.textContent = "Today’s Menu";
         taxIncludedPrice.textContent = "Display Price (Tax Included)";
         create_menu(menuData_en, ["", "yen", "inc.tax "]);
+        create_course_menu(courseMenuData_en, ["～","inc.tax","※We kindly ask that all guests order a course meal.<br>※Rice refills are complimentary."]);
         sw.querySelector('[data-type="Single"]').innerText = "Single";
-sw.querySelector('[data-type="Course"]').innerText = "Course";
+        sw.querySelector('[data-type="Course"]').innerText = "Course";
       }
       else if (lang === "zh") {
         todayMenu.textContent = "今日菜单";
         taxIncludedPrice.textContent = "含税价格显示";
         create_menu(menuData_zh, ["", "yen", "含税:"]);
         sw.querySelector('[data-type="Single"]').innerText = "单品";
-sw.querySelector('[data-type="Course"]').innerText = "套餐";
+        sw.querySelector('[data-type="Course"]').innerText = "套餐";
       }
       else if (lang === "ko") {
         todayMenu.textContent = "오늘의 메뉴";
         taxIncludedPrice.textContent = "부가세 포함 가격 표시";
         create_menu(menuData_ko, ["", "yen", "inc.tax "]);
         sw.querySelector('[data-type="Single"]').innerText = "단품";
-sw.querySelector('[data-type="Course"]').innerText = "코스";
+        sw.querySelector('[data-type="Course"]').innerText = "코스";
       }
       else {
         todayMenu.textContent = "言語エラー";
         taxIncludedPrice.textContent = "language error";
         sw.querySelector('[data-type="Single"]').innerText = "Single";
-sw.querySelector('[data-type="Course"]').innerText = "Course";
+        sw.querySelector('[data-type="Course"]').innerText = "Course";
         console.log("error");
       }
     }
