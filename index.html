@@ -165,39 +165,11 @@
       transform: translateY(-4px);
     }
 
-    .course-image-wrapper {
+    /* メイン画像（正方形を中心に表示） */
+    .course-image {
       position: relative;
       width: 100%;
-      height: 160px;
-      /* 固定 */
-      overflow: hidden;
-      border-bottom: 1px solid #eee;
-    }
-
-    /* 背景ぼかし（左右に広がる偽の背景） */
-    .course-image-blur {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 110%;
-      /* 少し広げて隙間を消す */
       height: 100%;
-      object-fit: cover;
-      transform: translateX(-50%);
-      filter: blur(20px);
-      opacity: 0.7;
-      z-index: 1;
-    }
-
-    /* メイン画像（正方形を中心に表示） */
-    .course-image-main {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      height: 100%;
-      width: auto;
-      /* ←正方形なので縦固定 */
-      transform: translate(-50%, -50%);
       z-index: 2;
     }
 
@@ -224,6 +196,7 @@
       font-size: 14px;
       color: #444;
     }
+
     .course-supplement {
       padding-right: 10px;
       padding-bottom: 5px;
@@ -449,8 +422,8 @@
       "焼酎": {
         "二階堂": { price: 500 },
         "黒霧島": { price: 500 },
-        "富乃宝山": { price: 660 },
-        "中々": { price: 660 }
+        "富乃宝山": { price: 600 },
+        "中々": { price: 600 }
       },
       "日本酒": {
         "貴仙寿 1合": { price: 500 },
@@ -465,7 +438,7 @@
         "IV コナンドラム レッド(ボトル)": { price: 9000 },
       },
       "白ワイン": {
-        "ｿｰｳﾞｨﾆﾖﾝ ﾌﾞﾗﾝ ｼｬﾙﾄﾞﾈ(グラス)": { price: 500 },
+        "ソーヴィニヨン ブラン シャルドネ(グラス)": { price: 500 },
       },
       "ソフトドリンク": {
         "ウーロン茶": { price: 350 },
@@ -598,46 +571,572 @@
     };
     const menuData_en = {
       "Beer": {
-        "Draft Beer": { "price": 550 },
-        "Bottled Beer": { "price": 660 },
-        "Non-Alcoholic Beer": { "price": 450 }
+        "Draft Beer (Medium)": { price: 550 },
+        "Bottled Beer": { price: 650 },
+        "Asahi Dry Zero": { price: 450 }
       },
       "Highball": {
-        "Kaku Highball": { "price": 495 },
-        "White Highball": { "price": 495 },
-        "Black Highball": { "price": 495 },
-        "Ao Highball": { "price": 715 },
-        "Premium Highball": { "price": 935 }
+        "Rich Highball": { price: 500 },
+        "White Highball": { price: 650 },
+        "Black Highball": { price: 650 },
+        "Yuzu Highball": { price: 550 },
+        "Coke Highball": { price: 550 },
+        "Ginger Highball": { price: 550 },
+        "Sudachi Highball": { price: 550 },
+        "Today's Recommended Highball": { price: 1000 }
+      },
+      "Makgeolli": {
+        "JINRO (Glass)": { price: 450 },
+        "JINRO (Bottle)": { price: 2500 }
+      },
+      "Chuhai": {
+        "Lemon Sour": { price: 500 },
+        "Green Lime Sour": { price: 500 },
+        "Thick Yuzu Sour": { price: 500 },
+        "Grape Sour": { price: 550 },
+        "Tokushima Sudachi Sour": { price: 550 },
+        "Mandarin Orange Sour": { price: 550 },
+        "Grated Ginger Sour": { price: 550 }
+      },
+      "Fruit Liquor": {
+        "Nanko Plum Wine": { price: 500 },
+        "White Peach Wine": { price: 500 },
+        "Cassis Wine": { price: 500 }
+      },
+      "Cocktail": {
+        "Fuzzy Navel": { price: 500 },
+        "Cassis Orange": { price: 500 },
+        "Cassis Oolong": { price: 500 }
+      },
+      "Shochu": {
+        "Nikaido": { price: 500 },
+        "Kuro Kirishima": { price: 500 },
+        "Tomino Hozan": { price: 600 },
+        "Nakanaka": { price: 600 }
+      },
+      "Sake": {
+        "Kisenju 180ml": { price: 500 },
+        "　　　 360ml": { price: 700 }
+      },
+      "Red Wine": {
+        "Cabernet Sauvignon (Glass)": { price: 500 },
+        "Neprica Primitivo (Bottle)": { price: 3000 },
+        "Cellar Selection Pinot Noir (Bottle)": { price: 4000 },
+        "Iberico Crianza (Bottle)": { price: 5000 },
+        "Clarendelle Rouge (Bottle)": { price: 7000 },
+        "IV Conundrum Red (Bottle)": { price: 9000 }
+      },
+      "White Wine": {
+        "Sauvignon Blanc / Chardonnay (Glass)": { price: 500 }
+      },
+      "Soft Drinks": {
+        "Oolong Tea": { price: 350 },
+        "Orange Juice": { price: 350 },
+        "Cola": { price: 350 },
+        "Calpis Juice": { price: 350 },
+        "Calpis Soda": { price: 350 },
+        "Ginger Ale": { price: 350 },
+        "Ramune": { price: 350 },
+        "Yuzu Tea": { price: 350 },
+        "Barley Tea": { price: 0 }
+      },
+      "Sashimi": {
+        "Senmai Sashimi": { price: 800 },
+        "Seared Heart Sashimi": { price: 800 },
+        "Wagyu Cheek Yukhoe": { price: 1000 },
+        "Seared Wagyu Yukhoe": { price: 1250 },
+        "Marbled Tongue Sashimi": { price: 1300 },
+        "Marbled Wagyu Sashimi": { price: 1300 }
+      },
+      "Tongue": {
+        "Salted Tongue with Green Onion": { price: 950 },
+        "Premium Salt Tongue": { price: 1300 },
+        "Premium Onion-covered Salt Tongue": { price: 1500 },
+        "Thick-cut Premium Salt Tongue": { price: 1800 }
+      },
+      "Lean Meat": {
+        "Wagyu Kalbi": { price: 900 },
+        "Nakaochi Kalbi": { price: 800 },
+        "Special Harami": { price: 900 },
+        "Wagyu Cheek": { price: 800 },
+        "Premium Wagyu Kalbi": { price: 1500 },
+        "Special Premium Harami": { price: 1500 },
+        "Wagyu Sukiyaki Kalbi": { price: 1500 },
+        "Wagyu Shabu-shabu Kalbi": { price: 1500 }
+      },
+      "Premium Lean Meat": {
+        "Marbled Wagyu Loin": { price: 1800 },
+        "Special One-piece Harami": { price: 2000 },
+        "Special One-piece Loin": { price: 2500 },
+        "Premium Wagyu Lean Meat Assortment": { price: 3000 }
+      },
+      "Hormone (Offal)": {
+        "Special Salt Hormone with Broth": { price: 800 },
+        "Heart": { price: 650 },
+        "Liver": { price: 650 },
+        "Senmai": { price: 650 },
+        "Shimacho": { price: 700 },
+        "Premium Mino": { price: 700 },
+        "Wagyu Cheek": { price: 800 },
+        "Seared Thick-cut Liver": { price: 900 },
+        "Domestic Offal 3-kind Assortment": { price: 1300 }
+      },
+      "Seafood": {
+        "Salt-grilled Shrimp": { price: 700 },
+        "Grilled Scallop (with Shell)": { price: 700 },
+        "Grilled Abalone": { price: 1000 },
+        "Seafood 3-kind Assortment": { price: 2000 }
+      },
+      "Grilled Vegetables": {
+        "Onion": { price: 400 },
+        "Shiitake": { price: 400 },
+        "Green Pepper": { price: 400 },
+        "Corn": { price: 400 },
+        "Assorted Vegetables": { price: 800 }
+      },
+      "Chicken / Pork": {
+        "Miyazaki Chicken Thigh": { price: 550 },
+        "Pork Toro": { price: 550 },
+        "Gran Alto Sausage": { price: 400 }
+      },
+      "Side Dishes": {
+        "Green Onion Bomb": { price: 300 },
+        "Korean Seaweed": { price: 300 },
+        "Grilled Garlic": { price: 450 },
+        "Chilled Dashi Tomato": { price: 500 },
+        "Chijimi": { price: 600 },
+        "Pork Feet": { price: 500 }
+      },
+      "Kimchi": {
+        "Napa Kimchi": { price: 450 },
+        "Daikon Kimchi": { price: 450 },
+        "Cucumber Kimchi": { price: 450 },
+        "Assorted Kimchi": { price: 800 }
+      },
+      "Namul": {
+        "Bean Sprout Namul": { price: 450 },
+        "Spinach Namul": { price: 450 },
+        "Daikon Namul": { price: 450 },
+        "Assorted Namul": { price: 800 }
+      },
+      "Salad": {
+        "Sanchu Lettuce": { price: 400 },
+        "Sesame Leaves": { price: 400 },
+        "Sunny Lettuce": { price: 400 },
+        "Assorted Sanchu": { price: 750 },
+        "Choregi Salad": { price: 700 },
+        "Seasonal Colorful Salad": { price: 800 }
+      },
+      "Rice": {
+        "Rice (Small)": { price: 250 },
+        "Rice (Medium)": { price: 350 },
+        "Rice (Large)": { price: 450 },
+        "Bibimbap": { price: 800 },
+        "Bibimbap (Half)": { price: 600 },
+        "Stone-grilled Bibimbap": { price: 1000 },
+        "Gomtang Soup Rice": { price: 850 },
+        "Yukgaejang Soup Rice": { price: 850 },
+        "Green Onion Egg Rice": { price: 600 }
+      },
+      "Soup": {
+        "Egg Soup": { price: 500 },
+        "Egg Soup (Half)": { price: 400 },
+        "Wakame Soup": { price: 500 },
+        "Wakame Soup (Half)": { price: 400 },
+        "Egg & Wakame Soup": { price: 600 },
+        "Egg & Wakame Soup (Half)": { price: 500 },
+        "Gomtang Soup": { price: 800 },
+        "Gomtang Soup (Half)": { price: 600 },
+        "Yukgaejang Soup": { price: 800 },
+        "Yukgaejang Soup (Half)": { price: 600 }
+      },
+      "Noodles": {
+        "Morioka Cold Noodles": { price: 1000 },
+        "Morioka Cold Noodles (Half)": { price: 700 },
+        "Bibim Noodles": { price: 1000 },
+        "Bibim Noodles (Half)": { price: 700 },
+        "Warm Noodles": { price: 1000 }
       }
-    }
+    };
     const menuData_zh = {
       "啤酒": {
-        "生啤酒": { "price": 550 },
-        "瓶装啤酒": { "price": 660 },
-        "无酒精啤酒": { "price": 450 }
+        "生啤酒（中杯）": { price: 550 },
+        "瓶装啤酒": { price: 650 },
+        "朝日Dry Zero": { price: 450 }
       },
-      "高球酒": {
-        "角高球": { "price": 495 },
-        "白高球": { "price": 495 },
-        "黑高球": { "price": 495 },
-        "碧高球": { "price": 715 },
-        "高级高球": { "price": 935 }
+      "高杯酒": {
+        "浓郁高杯酒": { price: 500 },
+        "白高杯酒": { price: 650 },
+        "黑高杯酒": { price: 650 },
+        "柚子高杯酒": { price: 550 },
+        "可乐高杯酒": { price: 550 },
+        "姜汁高杯酒": { price: 550 },
+        "香橙高杯酒": { price: 550 },
+        "今日推荐高杯酒": { price: 1000 }
+      },
+      "米酒（马格利）": {
+        "JINRO（杯）": { price: 450 },
+        "JINRO（瓶）": { price: 2500 }
+      },
+      "沙瓦": {
+        "柠檬沙瓦": { price: 500 },
+        "青柠沙瓦": { price: 500 },
+        "浓郁柚子沙瓦": { price: 500 },
+        "巨峰葡萄沙瓦": { price: 550 },
+        "德岛橘子沙瓦": { price: 550 },
+        "蜜柑沙瓦": { price: 550 },
+        "高知生姜沙瓦": { price: 550 }
+      },
+      "果酒": {
+        "南高梅酒": { price: 500 },
+        "白桃酒": { price: 500 },
+        "黑加仑酒": { price: 500 }
+      },
+      "鸡尾酒": {
+        "模糊海军": { price: 500 },
+        "黑加仑橙汁": { price: 500 },
+        "黑加仑乌龙茶": { price: 500 }
+      },
+      "烧酒": {
+        "二阶堂": { price: 500 },
+        "黑雾岛": { price: 500 },
+        "富乃宝山": { price: 600 },
+        "中々": { price: 600 }
+      },
+      "日本酒": {
+        "贵仙寿 一合": { price: 500 },
+        "贵仙寿 二合": { price: 700 }
+      },
+      "红酒": {
+        "赤霞珠（杯）": { price: 500 },
+        "Niprica 普里米蒂沃（瓶）": { price: 3000 },
+        "黑皮诺 精选（瓶）": { price: 4000 },
+        "伊比利哥 陈酿（瓶）": { price: 5000 },
+        "Clarendelle Rouge（瓶）": { price: 7000 },
+        "Conundrum Red（瓶）": { price: 9000 }
+      },
+      "白葡萄酒": {
+        "长相思 & 霞多丽（杯）": { price: 500 }
+      },
+      "软饮": {
+        "乌龙茶": { price: 350 },
+        "橙汁": { price: 350 },
+        "可乐": { price: 350 },
+        "Calpis 果汁": { price: 350 },
+        "Calpis 汽水": { price: 350 },
+        "姜汁汽水": { price: 350 },
+        "Ramune": { price: 350 },
+        "柚子茶": { price: 350 },
+        "麦茶": { price: 0 }
+      },
+      "刺身": {
+        "牛肚刺身": { price: 800 },
+        "炙烤牛心刺身": { price: 800 },
+        "和牛脸颊肉拌生": { price: 1000 },
+        "和牛炙烤拌生": { price: 1250 },
+        "霜降牛舌刺身": { price: 1300 },
+        "和牛霜降刺身": { price: 1300 }
+      },
+      "牛舌": {
+        "盐葱牛舌": { price: 950 },
+        "上等盐牛舌": { price: 1300 },
+        "葱多多上等牛舌": { price: 1500 },
+        "厚切上等牛舌": { price: 1800 }
+      },
+      "瘦肉": {
+        "和牛卡尔比": { price: 900 },
+        "中落卡尔比": { price: 800 },
+        "精品横膈膜": { price: 900 },
+        "和牛脸颊肉": { price: 800 },
+        "和牛上等卡尔比": { price: 1500 },
+        "特选上等横膈膜": { price: 1500 },
+        "和牛寿喜烧卡尔比": { price: 1500 },
+        "和牛涮烧卡尔比": { price: 1500 }
+      },
+      "特选瘦肉": {
+        "霜降和牛里脊": { price: 1800 },
+        "招牌整片横膈膜": { price: 2000 },
+        "招牌整片里脊": { price: 2500 },
+        "和牛特选瘦肉拼盘": { price: 3000 }
+      },
+      "内脏": {
+        "高汤盐味内脏": { price: 800 },
+        "牛心": { price: 650 },
+        "牛肝": { price: 650 },
+        "牛百叶": { price: 650 },
+        "大肠": { price: 700 },
+        "上等牛肚": { price: 700 },
+        "和牛脸颊": { price: 800 },
+        "炙烤牛肝角": { price: 900 },
+        "国产内脏三拼": { price: 1300 }
+      },
+      "海鲜": {
+        "盐烤虾": { price: 700 },
+        "带壳扇贝": { price: 700 },
+        "烤鲍鱼": { price: 1000 },
+        "海鲜三拼": { price: 2000 }
+      },
+      "烤蔬菜": {
+        "洋葱": { price: 400 },
+        "香菇": { price: 400 },
+        "青椒": { price: 400 },
+        "玉米": { price: 400 },
+        "蔬菜拼盘": { price: 800 }
+      },
+      "鸡肉/猪肉": {
+        "宫崎鸡腿肉": { price: 550 },
+        "猪颈肉": { price: 550 },
+        "香肠": { price: 400 }
+      },
+      "小菜": {
+        "葱拌": { price: 300 },
+        "韩国海苔": { price: 300 },
+        "烤蒜": { price: 450 },
+        "冷出汁番茄": { price: 500 },
+        "煎饼": { price: 600 },
+        "猪蹄": { price: 500 }
+      },
+      "泡菜": {
+        "白菜泡菜": { price: 450 },
+        "萝卜泡菜": { price: 450 },
+        "黄瓜泡菜": { price: 450 },
+        "泡菜拼盘": { price: 800 }
+      },
+      "拌菜": {
+        "豆芽拌菜": { price: 450 },
+        "菠菜拌菜": { price: 450 },
+        "萝卜拌菜": { price: 450 },
+        "拌菜拼盘": { price: 800 }
+      },
+      "沙拉": {
+        "生菜包": { price: 400 },
+        "苏子叶": { price: 400 },
+        "生菜": { price: 400 },
+        "生菜拼盘": { price: 750 },
+        "韩式沙拉": { price: 700 },
+        "时令沙拉": { price: 800 }
+      },
+      "米饭": {
+        "米饭 小": { price: 250 },
+        "米饭 中": { price: 350 },
+        "米饭 大": { price: 450 },
+        "拌饭": { price: 800 },
+        "拌饭 半份": { price: 600 },
+        "石锅拌饭": { price: 1000 },
+        "牛骨汤饭": { price: 850 },
+        "辣牛汤饭": { price: 850 },
+        "葱蛋饭": { price: 600 }
+      },
+      "汤": {
+        "鸡蛋汤": { price: 500 },
+        "鸡蛋汤 半份": { price: 400 },
+        "海带汤": { price: 500 },
+        "海带汤 半份": { price: 400 },
+        "海带鸡蛋汤": { price: 600 },
+        "海带鸡蛋汤 半份": { price: 500 },
+        "牛骨汤": { price: 800 },
+        "牛骨汤 半份": { price: 600 },
+        "辣牛汤": { price: 800 },
+        "辣牛汤 半份": { price: 600 }
+      },
+      "面": {
+        "盛冈冷面": { price: 1000 },
+        "盛冈冷面 半份": { price: 700 },
+        "拌面": { price: 1000 },
+        "拌面 半份": { price: 700 },
+        "热面": { price: 1000 }
       }
-    }
+    };
     const menuData_ko = {
       "맥주": {
-        "생맥주": { "price": 550 },
-        "병맥주": { "price": 660 },
-        "무알콜맥주": { "price": 450 }
+        "생맥주(중)": { price: 550 },
+        "병맥주": { price: 650 },
+        "아사히 드라이 제로": { price: 450 }
       },
       "하이볼": {
-        "각하이볼": { "price": 495 },
-        "화이트하이볼": { "price": 495 },
-        "블랙하이볼": { "price": 495 },
-        "아오하이볼": { "price": 715 },
-        "프리미엄하이볼": { "price": 935 }
+        "리치 하이볼": { price: 500 },
+        "화이트 하이볼": { price: 650 },
+        "블랙 하이볼": { price: 650 },
+        "유자 하이볼": { price: 550 },
+        "콜라 하이볼": { price: 550 },
+        "진저 하이볼": { price: 550 },
+        "스다치 하이볼": { price: 550 },
+        "오늘의 추천 하이볼": { price: 1000 }
+      },
+      "막걸리": {
+        "진로(글라스)": { price: 450 },
+        "진로(병)": { price: 2500 }
+      },
+      "사워": {
+        "레몬 사워": { price: 500 },
+        "그린 라임 사워": { price: 500 },
+        "진한 유자 사워": { price: 500 },
+        "거봉 사워": { price: 550 },
+        "도쿠시마 스다치 사워": { price: 550 },
+        "온슈 미칸 사워": { price: 550 },
+        "생강 사워": { price: 550 }
+      },
+      "과일주": {
+        "난코우 매실주": { price: 500 },
+        "백도주": { price: 500 },
+        "카시스주": { price: 500 }
+      },
+      "칵테일": {
+        "피치 오렌지 (퍼지 네이블)": { price: 500 },
+        "카시스 오렌지": { price: 500 },
+        "카시스 우롱": { price: 500 }
+      },
+      "소주": {
+        "니카이도": { price: 500 },
+        "쿠로키리시마": { price: 500 },
+        "토미노 호잔": { price: 600 },
+        "나카나카": { price: 600 }
+      },
+      "일본주": {
+        "기센주 1홉": { price: 500 },
+        "기센주 2홉": { price: 700 }
+      },
+      "레드 와인": {
+        "카베르네 소비뇽(글라스)": { price: 500 },
+        "네프리카 프리미티보(병)": { price: 3000 },
+        "셀러 셀렉션 피노누아(병)": { price: 4000 },
+        "이베리코 크리안자(병)": { price: 5000 },
+        "클라렌델 루즈(병)": { price: 7000 },
+        "코난드럼 레드(병)": { price: 9000 }
+      },
+      "화이트 와인": {
+        "소비뇽 블랑 & 샤르도네(글라스)": { price: 500 }
+      },
+      "음료": {
+        "우롱차": { price: 350 },
+        "오렌지 주스": { price: 350 },
+        "콜라": { price: 350 },
+        "칼피스 주스": { price: 350 },
+        "칼피스 소다": { price: 350 },
+        "진저에일": { price: 350 },
+        "라무네": { price: 350 },
+        "유자차": { price: 350 },
+        "보리차": { price: 0 }
+      },
+      "회 · 육회": {
+        "천엽": { price: 800 },
+        "심장 아부리": { price: 800 },
+        "와규 투르미 육회": { price: 1000 },
+        "와규 아부리 육회": { price: 1250 },
+        "살치살 아부리": { price: 1300 },
+        "와규 마블링 회": { price: 1300 }
+      },
+      "우설": {
+        "파 듬뿍 소금 우설": { price: 950 },
+        "상급 소금 우설": { price: 1300 },
+        "상급 파듬뿍 우설": { price: 1500 },
+        "두툼한 상급 우설": { price: 1800 }
+      },
+      "적살": {
+        "와규 칼비": { price: 900 },
+        "중떨어진 칼비": { price: 800 },
+        "특제 하라미": { price: 900 },
+        "와규 투르미": { price: 800 },
+        "상급 와규 칼비": { price: 1500 },
+        "특선 상급 하라미": { price: 1500 },
+        "와규 야키스키 칼비": { price: 1500 },
+        "와규 야키샤브 칼비": { price: 1500 }
+      },
+      "특선 적살": {
+        "와규 마블링 로스": { price: 1800 },
+        "명물 대형 하라미": { price: 2000 },
+        "명물 대형 로스": { price: 2500 },
+        "와규 특선 적살 모둠": { price: 3000 }
+      },
+      "곱창": {
+        "특제 다시 육수 소금 곱창": { price: 800 },
+        "심장": { price: 650 },
+        "간": { price: 650 },
+        "양": { price: 650 },
+        "대창": { price: 700 },
+        "상급 미노": { price: 700 },
+        "와규 투르미": { price: 800 },
+        "간 아부리 큐브": { price: 900 },
+        "국산 곱창 3종 모둠": { price: 1300 }
+      },
+      "해산물": {
+        "소금구이 새우": { price: 700 },
+        "가리비": { price: 700 },
+        "전복구이": { price: 1000 },
+        "해산물 3종 모둠": { price: 2000 }
+      },
+      "구운 채소": {
+        "양파": { price: 400 },
+        "표고버섯": { price: 400 },
+        "피망": { price: 400 },
+        "옥수수": { price: 400 },
+        "채소 모둠": { price: 800 }
+      },
+      "닭/돼지": {
+        "미야자키 닭다리살": { price: 550 },
+        "돼지 토로": { price: 550 },
+        "그랑 알토 소시지": { price: 400 }
+      },
+      "일품요리": {
+        "파무침": { price: 300 },
+        "김": { price: 300 },
+        "구운 마늘": { price: 450 },
+        "차가운 다시 토마토": { price: 500 },
+        "지짐이": { price: 600 },
+        "족발": { price: 500 }
+      },
+      "김치": {
+        "배추 김치": { price: 450 },
+        "깍두기": { price: 450 },
+        "오이 김치": { price: 450 },
+        "김치 모둠": { price: 800 }
+      },
+      "나물": {
+        "콩나물 무침": { price: 450 },
+        "시금치 무침": { price: 450 },
+        "무나물": { price: 450 },
+        "나물 모둠": { price: 800 }
+      },
+      "샐러드": {
+        "상추": { price: 400 },
+        "깻잎": { price: 400 },
+        "상추 (샐러드)": { price: 400 },
+        "상추 모둠": { price: 750 },
+        "초레기 샐러드": { price: 700 },
+        "계절 샐러드": { price: 800 }
+      },
+      "밥": {
+        "밥 (소)": { price: 250 },
+        "밥 (중)": { price: 350 },
+        "밥 (대)": { price: 450 },
+        "비빔밥": { price: 800 },
+        "비빔밥 하프": { price: 600 },
+        "돌솥비빔밥": { price: 1000 },
+        "곰탕 국밥": { price: 850 },
+        "육개장 국밥": { price: 850 },
+        "파폭탄 계란밥": { price: 600 }
+      },
+      "국": {
+        "계란국": { price: 500 },
+        "계란국 하프": { price: 400 },
+        "미역국": { price: 500 },
+        "미역국 하프": { price: 400 },
+        "미역계란국": { price: 600 },
+        "미역계란국 하프": { price: 500 },
+        "곰탕": { price: 800 },
+        "곰탕 하프": { price: 600 },
+        "육개장": { price: 800 },
+        "육개장 하프": { price: 600 }
+      },
+      "면": {
+        "모리오카 냉면": { price: 1000 },
+        "모리오카 냉면 하프": { price: 700 },
+        "비빔면": { price: 1000 },
+        "비빔면 하프": { price: 700 },
+        "온면": { price: 1000 }
       }
-    }
+    };
+
     const courseMenuData_ja = {
       "梅コース": {
         price: 6600,
@@ -654,7 +1153,7 @@
           "すき焼きカルビ",
           "国産ホルモン3種盛"
         ],
-        supplement : "飲み放題付き"
+        supplement: "飲み放題付き"
 
       },
 
@@ -673,7 +1172,7 @@
           "黒毛和牛特選A5赤身肉",
           "国産ホルモン3種盛"
         ],
-        supplement : "飲み放題付き"
+        supplement: "飲み放題付き"
       },
       "松コース": {
         price: 8800,
@@ -690,63 +1189,175 @@
           "黒毛和牛特選A5赤身肉",
           "おまかせ肉寿司2種盛"
         ],
-        supplement : "飲み放題付き"
+        supplement: "飲み放題付き"
       }
     };
 
     const courseMenuData_en = {
-  "Ume Course": {
-    price: 6050,
+      "Ume Course": {
+        price: 6050,
+        tax_included: true,
+        image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/ume.jpg",
+        items: [
+          "Assorted Kimchi",
+          "Assorted Namul",
+          "Fresh Choregi Salad",
+          "Senmai Sashimi (Omasum)",
+          "Premium Salted Tongue",
+          "Wagyu Premium Karubi",
+          "Signature One-Slice Harami Steak",
+          "Sukiyaki-Style Karubi",
+          "Assorted Domestic Offal (3 kinds)"
+        ],
+        supplement: "Food only: ¥6,050 (inc.tax)<br>All-you-can-drink included: ¥6,600 (inc.tax)"
+      },
+
+      "Take Course": {
+        price: 7260,
+        tax_included: true,
+        image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/take.jpg",
+        items: [
+          "Assorted Kimchi",
+          "Assorted Namul",
+          "Fresh Choregi Salad",
+          "Premium Salted Tongue",
+          "Wagyu Marbled Sashimi",
+          "Premium Harami",
+          "Wagyu One-Slice Marbled Loin",
+          "Wagyu Selected A5 Lean Meat",
+          "Assorted Domestic Offal (3 kinds)"
+        ],
+        supplement: "Food only: ¥7,260 (inc.tax)<br>All-you-can-drink included: ¥7,700 (inc.tax)"
+      },
+
+      "Matsu Course": {
+        price: 8050,
+        tax_included: true,
+        image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/matsu.jpg",
+        items: [
+          "Assorted Kimchi",
+          "Assorted Namul",
+          "Fresh Choregi Salad",
+          "Wagyu Marbled Sashimi",
+          "Thick-Cut Premium Salted Tongue",
+          "Wagyu One-Slice Marbled Loin",
+          "Rare A5 Wagyu Lean Cut",
+          "Selected A5 Wagyu Lean Meat",
+          "Chef’s Choice Meat Sushi (2 kinds)"
+        ],
+        supplement: "Food only: ¥8,050 (inc.tax)<br>All-you-can-drink included: ¥8,800 (inc.tax)"
+      }
+    };
+
+    const courseMenuData_zh = {
+  "梅套餐": {
+    price: 6600,
     tax_included: true,
     image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/ume.jpg",
     items: [
-      "Assorted Kimchi",
-      "Assorted Namul",
-      "Fresh Choregi Salad",
-      "Senmai Sashimi (Omasum)",
-      "Premium Salted Tongue",
-      "Wagyu Premium Karubi",
-      "Signature One-Slice Harami Steak",
-      "Sukiyaki-Style Karubi",
-      "Assorted Domestic Offal (3 kinds)"
+      "泡菜拼盘",
+      "韩式小菜拼盘（拌菜）",
+      "新鲜青葱沙拉",
+      "牛百叶刺身",
+      "特选盐味牛舌",
+      "黑毛和牛上等五花肉",
+      "名物一大片横膈膜牛排",
+      "寿喜烧风味五花肉",
+      "国产内脏三种拼盘"
     ],
-    supplement: "Food only: ¥6,050 (inc.tax)<br>All-you-can-drink included: ¥6,600 (inc.tax)"
+    supplement: "仅料理：¥6,050（含税）<br>含畅饮：¥6,600（含税）"
   },
 
-  "Take Course": {
-    price: 7260,
+  "竹套餐": {
+    price: 7700,
     tax_included: true,
     image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/take.jpg",
     items: [
-      "Assorted Kimchi",
-      "Assorted Namul",
-      "Fresh Choregi Salad",
-      "Premium Salted Tongue",
-      "Wagyu Marbled Sashimi",
-      "Premium Harami",
-      "Wagyu One-Slice Marbled Loin",
-      "Wagyu Selected A5 Lean Meat",
-      "Assorted Domestic Offal (3 kinds)"
+      "泡菜拼盘",
+      "韩式小菜拼盘（拌菜）",
+      "新鲜青葱沙拉",
+      "特选盐味牛舌",
+      "和牛霜降刺身",
+      "特选上等横膈膜肉",
+      "和牛一大片霜降里脊",
+      "黑毛和牛特选A5瘦肉",
+      "国产内脏三种拼盘"
     ],
-    supplement: "Food only: ¥7,260 (inc.tax)<br>All-you-can-drink included: ¥7,700 (inc.tax)"
+    supplement: "仅料理：¥7,260（含税）<br>含畅饮：¥7,700（含税）"
   },
 
-  "Matsu Course": {
-    price: 8050,
+  "松套餐": {
+    price: 8800,
     tax_included: true,
     image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/matsu.jpg",
     items: [
-      "Assorted Kimchi",
-      "Assorted Namul",
-      "Fresh Choregi Salad",
-      "Wagyu Marbled Sashimi",
-      "Thick-Cut Premium Salted Tongue",
-      "Wagyu One-Slice Marbled Loin",
-      "Rare A5 Wagyu Lean Cut",
-      "Selected A5 Wagyu Lean Meat",
-      "Chef’s Choice Meat Sushi (2 kinds)"
+      "泡菜拼盘",
+      "韩式小菜拼盘（拌菜）",
+      "新鲜青葱沙拉",
+      "和牛霜降刺身",
+      "厚切特选盐味牛舌",
+      "和牛一大片霜降里脊",
+      "稀有部位A5瘦肉",
+      "黑毛和牛特选A5瘦肉",
+      "主厨精选肉寿司两种拼盘"
     ],
-    supplement: "Food only: ¥8,050 (inc.tax)<br>All-you-can-drink included: ¥8,800 (inc.tax)"
+    supplement: "仅料理：¥8,050（含税）<br>含畅饮：¥8,800（含税）"
+  }
+};
+
+    const courseMenuData_ko = {
+  "매 코스": {
+    price: 6600,
+    tax_included: true,
+    image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/ume.jpg",
+    items: [
+      "김치 모둠",
+      "나물 모둠",
+      "신선한 초레기 샐러드",
+      "선매이(천엽) 사시미",
+      "상급 소금 양념 우설",
+      "흑모화우 상급 갈비",
+      "명물 한 장 하라미 스테이크",
+      "스키야키 스타일 갈비",
+      "국산 곱창 3종 모둠"
+    ],
+    supplement: "요리만: ¥6,050 (세금 포함)<br>음료 무제한 포함: ¥6,600 (세금 포함)"
+  },
+
+  "죽 코스": {
+    price: 7700,
+    tax_included: true,
+    image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/take.jpg",
+    items: [
+      "김치 모둠",
+      "나물 모둠",
+      "신선한 초레기 샐러드",
+      "상급 소금 양념 우설",
+      "와규 마블링 사시미",
+      "특선 상급 하라미",
+      "와규 한 장 마블링 로스",
+      "흑모화우 특선 A5 등심살",
+      "국산 곱창 3종 모둠"
+    ],
+    supplement: "요리만: ¥7,260 (세금 포함)<br>음료 무제한 포함: ¥7,700 (세금 포함)"
+  },
+
+  "마츠 코스": {
+    price: 8800,
+    tax_included: true,
+    image: "https://raw.githubusercontent.com/japaneseyakiniku/menu/main/images/matsu.jpg",
+    items: [
+      "김치 모둠",
+      "나물 모둠",
+      "신선한 초레기 샐러드",
+      "와규 마블링 사시미",
+      "두툼한 상급 소금 양념 우설",
+      "와규 한 장 마블링 로스",
+      "희소 부위 A5 등심살",
+      "흑모화우 특선 A5 등심살",
+      "셰프 추천 고기 초밥 2종"
+    ],
+    supplement: "요리만: ¥8,050 (세금 포함)<br>음료 무제한 포함: ¥8,800 (세금 포함)"
   }
 };
 
@@ -843,10 +1454,7 @@
         card.className = "course-card";
 
         card.innerHTML = `
-        <div class="course-image-wrapper">
-          <img src="${data.image}" class="course-image-blur">
-          <img src="${data.image}" class="course-image-main">
-        </div>
+        <img src="${data.image}" class="course-image">
         <div class="course-content">
           <div class="course-title">${name}</div>
           <div class="course-price">￥${data.price.toLocaleString()}${language_data[0]}（${language_data[1]}）</div>
@@ -884,7 +1492,7 @@
         todayMenu.textContent = "本日のメニュー";
         taxIncludedPrice.textContent = "税込価格表示";
         create_menu(menuData_ja, ["", "円", "税込み"]);
-        create_course_menu(courseMenuData_ja, ["","税込","※コース料理は人数分のご注文をお願いします<br>※ご飯はおかわり自由です"]);
+        create_course_menu(courseMenuData_ja, ["", "税込", "※コース料理は人数分のご注文をお願いします<br>※ご飯はおかわり自由です"]);
         sw.querySelector('[data-type="Single"]').innerText = "単品";
         sw.querySelector('[data-type="Course"]').innerText = "コース";
       }
@@ -892,7 +1500,7 @@
         todayMenu.textContent = "Today’s Menu";
         taxIncludedPrice.textContent = "Display Price (Tax Included)";
         create_menu(menuData_en, ["", "yen", "inc.tax "]);
-        create_course_menu(courseMenuData_en, ["～","inc.tax","※We kindly ask that all guests order a course meal.<br>※Rice refills are complimentary."]);
+        create_course_menu(courseMenuData_en, ["～", "inc.tax", "※We kindly ask that all guests order a course meal.<br>※Rice refills are complimentary."]);
         sw.querySelector('[data-type="Single"]').innerText = "Single";
         sw.querySelector('[data-type="Course"]').innerText = "Course";
       }
@@ -900,6 +1508,7 @@
         todayMenu.textContent = "今日菜单";
         taxIncludedPrice.textContent = "含税价格显示";
         create_menu(menuData_zh, ["", "yen", "含税:"]);
+        create_course_menu(courseMenuData_zh,["", "含税", "※每位客人须点一份套餐<br>※米饭可无限续添"]);
         sw.querySelector('[data-type="Single"]').innerText = "单品";
         sw.querySelector('[data-type="Course"]').innerText = "套餐";
       }
@@ -907,6 +1516,7 @@
         todayMenu.textContent = "오늘의 메뉴";
         taxIncludedPrice.textContent = "부가세 포함 가격 표시";
         create_menu(menuData_ko, ["", "yen", "inc.tax "]);
+        create_course_menu(courseMenuData_ko,[ "", "세금 포함", "※코스 요리는 인원수만큼 주문해 주시기 바랍니다<br>※밥은 무한 리필 가능합니다"]);
         sw.querySelector('[data-type="Single"]').innerText = "단품";
         sw.querySelector('[data-type="Course"]').innerText = "코스";
       }
